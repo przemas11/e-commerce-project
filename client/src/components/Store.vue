@@ -12,8 +12,7 @@
       </ul>
 
       <div class="main-content">
-        SKLEPIK
-        <p>test</p>
+        <p class="display-4">Widok dostępnych produktów</p>
       </div>
     </div>
     <my-footer/>
@@ -42,7 +41,9 @@ export default {
 .main-content{
   width: 100%;
   margin-right: 150px;
-  background-color: #cacaca;
+  padding: 200px 0;
+  background-color: #f0f0f0;
+  border-radius: 15px;
 }
 
 @media screen and (max-width: 1600px) {

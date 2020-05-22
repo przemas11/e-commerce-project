@@ -1,10 +1,10 @@
 <template>
-  <div class="about">
-    <navbar v-bind:activeIndex='2'/>
+  <div class="cart">
+    <navbar/>
 
     <div id="content">
-      <div class="main-content display-4">
-        Strona zawierająca informacje o sklepie
+      <div class="main-content">
+        <p class="display-4">Koszyk</p>
       </div>
     </div>
     <my-footer/>
@@ -13,22 +13,15 @@
 
 <script>
 export default {
-  name: 'About',
+  name: 'Cart',
   props: {}
 }
 </script>
 
 <style scoped>
-.about{ text-align: center; }
+.main-page{ text-align: center; }
 
 #content{ display: flex; }
-
-#categories{
-  min-width: 15%;
-  padding: 10px 0px;
-  margin-left: 150px;
-  margin-right: 10px;
-}
 
 .main-content{
   width: 100%;

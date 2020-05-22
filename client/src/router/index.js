@@ -5,6 +5,8 @@ import MainPage from '@/components/MainPage'
 import Store from '@/components/Store'
 import AboutUs from '@/components/About'
 import Contact from '@/components/Contact'
+import AdminPanel from '@/components/AdminPanel'
+import Cart from '@/components/Cart'
 
 Vue.use(Router)
 
@@ -29,6 +31,16 @@ export default new Router({
       path: '/contact',
       name: 'Contact',
       component: Contact
+    },
+    {
+      path: '/admin',
+      name: 'AdminPanel',
+      component: AdminPanel
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: Cart
     }
   ]
 })

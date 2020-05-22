@@ -4,8 +4,12 @@
 
     <div id="content">
       <div class="main-content">
-        KONTAKT
-        <p>test</p>
+        <p>Adres: ul. Testowa 123, Poznań</p>
+        <p>Tel: 123 123 123</p>
+        <p>pon.-pt. 8:00-16:00</p>
+        <p>E-mail: test@test.pl</p>
+        <p></p>
+        <p></p>
       </div>
     </div>
     <my-footer/>
@@ -33,8 +37,11 @@ export default {
 
 .main-content{
   width: 100%;
+  font-size: 30px;
   margin-right: 150px;
   margin-left: 150px;
-  background-color: #cacaca;
+  padding: 200px 0;
+  background-color: #f0f0f0;
+  border-radius: 15px;
 }
 </style>

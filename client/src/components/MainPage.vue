@@ -4,8 +4,8 @@
 
     <div id="content">
       <div class="main-content">
-        STRONA GŁÓWNA
-        <p>test</p>
+        <p class="display-3">Dzień dobry</p>
+        <p class="display-4">Zapraszamy do zakupów w naszym sklepie</p>
       </div>
     </div>
     <my-footer/>
@@ -28,6 +28,8 @@ export default {
   width: 100%;
   margin-right: 150px;
   margin-left: 150px;
-  background-color: #cacaca;
+  padding: 250px 0;
+  background-color: #f0f0f0;
+  border-radius: 15px;
 }
 </style>
