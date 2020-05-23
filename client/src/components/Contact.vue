@@ -18,8 +18,7 @@
 
 <script>
 export default {
-  name: 'Contact',
-  props: {}
+  name: 'Contact'
 }
 </script>
 

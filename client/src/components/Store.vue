@@ -21,8 +21,7 @@
 
 <script>
 export default {
-  name: 'MainPage',
-  props: {}
+  name: 'MainPage'
 }
 </script>
 

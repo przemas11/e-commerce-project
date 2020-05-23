@@ -15,7 +15,7 @@ app.use(cors())
 var Product = require("../models/product");
 var mongoose = require('mongoose');
 //var connectionString = "mongodb+srv://"+cfg.DB_USER+":"+cfg.DB_PASS+"@"+cfg.DB_HOST;
-mongoose.connect('mongodb://localhost:27017/posts');
+mongoose.connect('mongodb://localhost:27017/products');
 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error"));
@@ -24,49 +24,36 @@ db.once("open", function(callback){
 });
 
 // API ENDPOINTS
-app.get('/products', (req, res) => {
-  res.send(
-    [{
-      title: "Hello World!",
-      description: "Hi there! How are you?"
-    }]
-  )
-})
 
 // Add new product
 app.post('/products', (req, res) => {
-  var db = req.db;
-  var title = req.body.title;
-  var description = req.body.description;
-  var new_product = new Product({
-    productName: productName,
-    seller: seller,
-    price: price,
-    description: description,
-    shipping: shipping,
-    warranty: warranty,
-    quantity: quantity
-  })
+  Product.create(
+    {
+      productName: req.body.productName,
+      seller: req.body.seller,
+      price: req.body.price,
+      description: req.body.description,
+      shipping: req.body.shipping,
+      warranty: req.body.warranty,
+      quantity: req.body.quantity
+    },
+    function(err) {
+      if (err) res.send(err);
 
-  new_product.save(function (error) {
-    if (error) {
-      console.log(error)
+      res.send({
+        success: true,
+        message: 'Product saved successfully!'
+      })
     }
-    res.send({
-      success: true,
-      message: 'Product saved successfully!'
-    })
-  })
+  )
 })
 
 // Fetch all products
 app.get('/products', (req, res) => {
-  Product.find({}, 'title description', function (error, posts) {
-    if (error) { console.error(error); }
-    res.send({
-      products: products
-    })
-  }).sort({_id:-1})
+  Product.find(function (err, products) {
+    if (err) res.send(err);
+    res.json(products);
+  })
 })
 
 app.listen(process.env.PORT || 8081)

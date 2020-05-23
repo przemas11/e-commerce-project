@@ -13,8 +13,7 @@
 
 <script>
 export default {
-  name: 'Cart',
-  props: {}
+  name: 'Cart'
 }
 </script>
 

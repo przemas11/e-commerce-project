@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style scoped>
-.navbar{ margin: 10px 150px; border-radius: 15px; }
+.navbar{ margin: 10px 150px; border-radius: 15px; min-width: 930px;}
 
 .navbar-brand{ margin-left: 40px; margin-right: 70px; }
 
