@@ -29,7 +29,7 @@ db.once("open", function(callback){
 app.post('/products', (req, res) => {
   Product.create(
     {
-      productName: req.body.productName,
+      name: req.body.name,
       seller: req.body.seller,
       price: req.body.price,
       description: req.body.description,

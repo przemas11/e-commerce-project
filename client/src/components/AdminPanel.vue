@@ -70,6 +70,10 @@
           <div class="product-manage" v-if="mode===2">
             <h1 class="display-4">Zarządzanie produktami</h1>
             <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
+
+            <div v-for="product in products" :key="product.name">
+              <product-view class="product-view" :product="product" :manage="true"/>
+            </div>
           </div>
 
           <div class="orders" v-if="mode===3">
@@ -85,9 +89,13 @@
 
 <script>
 import ProductsService from '../services/ProductsService'
+import ProductView from './ProductView'
 
 export default {
   name: 'AdminPanel',
+  components: {
+    'product-view': ProductView
+  },
   data: function () {
     return {
       loggedIn: true,
@@ -140,7 +148,6 @@ export default {
 
     getProducts: async function () {
       this.products = await ProductsService.fetchProducts()
-      console.log(this.products)
     },
 
     manageProducts: function () {
@@ -187,4 +194,8 @@ export default {
 h1{ margin-bottom: 20px; }
 
 h1+.btn{ margin-bottom: 30px; }
+
+.product-view{
+  margin-bottom: 15px;
+}
 </style>
