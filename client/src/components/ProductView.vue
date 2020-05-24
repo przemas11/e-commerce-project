@@ -14,13 +14,14 @@
           </div>
         </div>
 
-        <div class="management-btns col-md-2" v-if="manage">
-          <button type="button" class="btn btn-primary" @click="edit=true">Edytuj produkt</button>
-          <button type="button" class="btn btn-danger" @click="addProduct">Usuń produkt</button>
+        <div class="product-btns col-2 offset-1" v-if="manage">
+          <button type="button" class="btn btn-primary" @click="editProduct">Edytuj produkt</button>
+          <button type="button" class="btn btn-danger" @click="deleteProduct">Usuń produkt</button>
         </div>
-        <!-- <div class="col-md-1 add-to-cart">
-          Do koszyka
-        </div> -->
+
+        <div class="management-btns col-2 offset-1" v-if="!manage">
+          <button type="button" class="btn btn-primary" @click="addToCart">Dodaj do koszyka</button>
+        </div>
       </div>
     </div>
   </div>
@@ -30,12 +31,23 @@
 export default {
   name: 'ProductView',
   props: {
-    product: Object,
+    product: undefined,
     manage: false
   },
   data: function () {
     return {
       edit: false
+    }
+  },
+  methods: {
+    editProduct: function () {
+      this.$emit('edit', this.product._id)
+    },
+    deleteProduct: function () {
+      this.$emit('delete', this.product._id)
+    },
+    addToCart: function () {
+      this.$emit('addToCart', this.product._id)
     }
   }
 }
@@ -60,9 +72,9 @@ export default {
   margin: auto;
 }
 
-.management-btns{ margin-top: auto; margin-bottom: auto; }
+.product-btns{ margin-top: auto; margin-bottom: auto; }
 
-.management-btns>button{ width: 100%; margin-bottom: 6px; }
+.product-btns>button{ width: 100%; margin-bottom: 6px; }
 
 /* .add-to-cart{
 
