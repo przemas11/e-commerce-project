@@ -14,69 +14,43 @@
         <div class="panel" v-if="loggedIn">
           <div class="select-mode" v-if="mode===0">
             <h1 class="display-4">Admin panel</h1>
-            <div class="form-group">
+            <div class="form-row form-group justify-content-center">
               <button type="button" class="btn btn-primary" @click="mode=1">Dodaj nowy produkt</button>
-              <button type="button" class="btn btn-secondary" @click="manageProducts">Zarządzaj istniejącymi produkatmi</button>
-              <button type="button" class="btn btn-dark" @click="mode=3">Zarządzanie zamówieniami</button>
+            </div>
+            <div class="form-row form-group justify-content-center">
+              <button type="button" class="btn btn-info" @click="manageProducts">Zarządzaj istniejącymi produkatmi</button>
+            </div>
+            <div class="form-row form-group justify-content-center">
+              <button type="button" class="btn btn-secondary" @click="mode=3">Zarządzaj kategoriami</button>
+            </div>
+            <div class="form-row form-group justify-content-center">
+              <button type="button" class="btn btn-dark" @click="mode=4">Zarządzanie zamówieniami</button>
             </div>
           </div>
 
-          <div class="product-add" v-if="mode===1">
+          <div v-if="mode===1">
             <h1 class="display-4">Dodawanie nowego produktu</h1>
             <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
-
-            <div class="form-group">
-              <div class="row justify-content-md-center">
-                <div class="col-4">
-                  <label>Nazwa</label>
-                  <input type="text" class="form-control" placeholder="Nazwa" v-model="newProductName" @keyup.enter="addProduct">
-                </div>
-
-                <div class="col-2">
-                  <label>Cena</label>
-                  <input type="number" class="form-control" placeholder="Cena" v-model="newProductPrice" @keyup.enter="addProduct">
-                </div>
-              </div>
-              <div class="row justify-content-md-center">
-                <div class="col-6">
-                  <label>Opis</label>
-                  <input type="text" class="form-control" placeholder="Opis" v-model="newProductDescription" @keyup.enter="addProduct">
-                </div>
-              </div>
-              <div class="row justify-content-md-center">
-                <div class="col-6">
-                  <label>Dostawa</label>
-                  <input type="text" class="form-control" placeholder="Dostawa" v-model="newProductShipping" @keyup.enter="addProduct">
-                </div>
-              </div>
-              <div class="row justify-content-md-center">
-                <div class="col-2">
-                  <label>Gwarancja (miesiące)</label>
-                  <input type="number" class="form-control" placeholder="Miesiące" v-model="newProductWarranty" @keyup.enter="addProduct">
-                </div>
-                <div class="col-2">
-                  <label>Ilość</label>
-                  <input type="number" class="form-control" placeholder="Ilość" v-model="newProductQuantity" @keyup.enter="addProduct">
-                </div>
-              </div>
-
-              <div class="buttons">
-                <button type="button" class="btn btn-primary" @click="addProduct">Dodaj produkt</button>
-                <button type="button" class="btn btn-primary" @click="clearInput">Wyczyść pola</button>
-              </div>
-            </div>
+            <product-form v-on:return="mode=0" :product="product" v-on:confirm="newConfirmed"/>
           </div>
 
           <div class="product-manage" v-if="mode===2">
             <h1 class="display-4">Zarządzanie produktami</h1>
-            <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
+            <button type="button" class="btn btn-primary" @click="closeManagement">Powrót</button>
+
+            <product-form v-if="edit===true" :product="product" :key="formUpdate" v-on:cancel="edit=false" v-on:confirm="editRequest"/>
 
             <div v-for="product in products" :key="product.name">
-              <product-view class="product-view" :product="product" :manage="true"/>
+              <product-view class="product-view" :product="product" v-on:edit="enableEditMode" v-on:delete="deleteRequest" :manage="true"/>
             </div>
           </div>
 
-          <div class="orders" v-if="mode===3">
+          <div v-if="mode===3">
+            <h1 class="display-4">Zarządzenie kategoriami</h1>
+            <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
+          </div>
+
+          <div class="orders" v-if="mode===4">
             <h1 class="display-4">Zarządzanie zamówieniami</h1>
             <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
           </div>
@@ -90,11 +64,13 @@
 <script>
 import ProductsService from '../services/ProductsService'
 import ProductView from './ProductView'
+import ProductForm from './ProductForm'
 
 export default {
   name: 'AdminPanel',
   components: {
-    'product-view': ProductView
+    'product-view': ProductView,
+    'product-form': ProductForm
   },
   data: function () {
     return {
@@ -102,13 +78,17 @@ export default {
       loginInput: '',
       passwordInput: '',
       mode: 0,
-      newProductName: '',
-      newProductPrice: null,
-      newProductDescription: '',
-      newProductShipping: '',
-      newProductWarranty: null,
-      newProductQuantity: null,
-      products: []
+      edit: false,
+      product: {
+        name: '',
+        price: null,
+        description: '',
+        shipping: '',
+        warranty: null,
+        quantity: null
+      },
+      products: [],
+      formUpdate: 0
     }
   },
   methods: {
@@ -124,18 +104,18 @@ export default {
     },
 
     addProduct: function () {
-      if (this.newProductName && this.newProductPrice &&
-      this.newProductDescription && this.newProductShipping &&
-      this.newProductWarranty && this.newProductQuantity) {
+      if (this.product.name && this.product.price &&
+      this.product.description && this.product.shipping &&
+      this.product.warranty && this.product.quantity) {
         var pattern = /^\d*$/
-        if (pattern.test(this.newProductWarranty) && pattern.test(this.newProductQuantity)) {
+        if (pattern.test(this.product.warranty) && pattern.test(this.product.quantity)) {
           ProductsService.addProduct({
-            name: this.newProductName,
-            price: this.newProductPrice,
-            description: this.newProductDescription,
-            shipping: this.newProductShipping,
-            warranty: this.newProductWarranty,
-            quantity: this.newProductQuantity
+            name: this.product.name,
+            price: this.product.price,
+            description: this.product.description,
+            shipping: this.product.shipping,
+            warranty: this.product.warranty,
+            quantity: this.product.quantity
           })
           this.clearInput()
         } else {
@@ -144,6 +124,14 @@ export default {
       } else {
         alert('Proszę wypłenić wszystkie pola')
       }
+    },
+
+    editProduct: async function () {
+      this.products = await ProductsService.editProduct(this.product)
+    },
+
+    deleteProduct: async function () {
+      this.products = await ProductsService.deleteProduct(this.product)
     },
 
     getProducts: async function () {
@@ -156,12 +144,41 @@ export default {
     },
 
     clearInput: function () {
-      this.newProductName = ''
-      this.newProductPrice = null
-      this.newProductDescription = ''
-      this.newProductShipping = ''
-      this.newProductWarranty = null
-      this.newProductQuantity = null
+      this.productData.name = ''
+      this.productData.price = null
+      this.productData.description = ''
+      this.productData.shipping = ''
+      this.productData.warranty = null
+      this.productData.quantity = null
+    },
+
+    closeManagement: function () {
+      this.mode = 0
+      this.edit = false
+    },
+
+    newConfirmed: function (product) {
+      this.product = product
+      this.addProduct()
+    },
+
+    editRequest: function (product) {
+      this.product = product
+      this.editProduct()
+    },
+
+    enableEditMode: function (productId) {
+      this.product = this.products.find(x => x._id === productId)
+      if (!this.edit) {
+        this.edit = true
+      } else {
+        this.formUpdate += 1
+      }
+    },
+
+    deleteRequest: function (productId) {
+      this.product = this.products.find(x => x._id === productId)
+      this.deleteProduct()
     }
   }
 }
@@ -183,11 +200,11 @@ export default {
 
 .form-control{ margin-bottom: 10px; text-align: center; }
 
-.btn{ margin-bottom: 10px; }
+/* .btn{ margin-bottom: 10px; }
+
+.buttons{ margin-top: 30px; } */
 
 .login-form{ padding-top: 100px; margin: auto; width: 400px; }
-
-.buttons{ margin-top: 30px; }
 
 .panel{ margin-top: 50px; }
 
