@@ -2,13 +2,13 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var ProductSchema = new Schema({
-  name: String,
-  price: Number,
-  description: String,
-  shipping: String,
-  warranty: Number,
-  quantity: Number,
-  category: String,
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String, required: true },
+  shipping: { type: String, required: true },
+  warranty: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+  category: { type: String, required: true },
 },
 {
   timestamps: true
