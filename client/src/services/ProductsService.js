@@ -9,6 +9,7 @@ export default {
 
   addProduct (params) {
     return Api().post('api/products', params)
+      .then(response => { return response.data })
       .catch(error => console.log(error))
   },
 

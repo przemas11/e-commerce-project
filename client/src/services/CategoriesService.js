@@ -9,6 +9,7 @@ export default {
 
   addCategory (params) {
     return Api().post('api/categories', params)
+      .then(response => { return response.data })
       .catch(error => console.log(error))
   },
 
