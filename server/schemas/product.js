@@ -14,5 +14,4 @@ var ProductSchema = new Schema({
   timestamps: true
 });
 
-var Product = mongoose.model("Product", ProductSchema);
-module.exports = Product;
+module.exports = ProductSchema;
