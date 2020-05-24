@@ -8,6 +8,7 @@ var ProductSchema = new Schema({
   shipping: String,
   warranty: Number,
   quantity: Number,
+  category: String,
 },
 {
   timestamps: true
