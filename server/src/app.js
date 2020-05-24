@@ -49,11 +49,12 @@ app.post('/api/products', function(req, res) {
     },
     function(err) {
       if (err) res.send(err);
-
-      res.send({
-        success: true,
-        message: 'Product saved successfully!'
-      })
+      else {
+        Product.find(function(err, products) {
+          if (err) res.send(err);
+          res.json(products);
+        })
+      }
     }
   )
 })
@@ -104,15 +105,16 @@ app.delete("/api/products/:product_id", function(req, res) {
 app.post('/api/categories', function(req, res) {
   Category.create(
     {
-      name: req.body.name,
+      name: req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1).toLowerCase()
     },
-    function(err) {
+    function(err) { 
       if (err) res.send(err);
-
-      res.send({
-        success: true,
-        message: 'Category saved successfully!'
-      })
+      else {
+        Category.find(function(err, categories) {
+          if (err) res.send(err);
+          res.json(categories);
+        })
+      }
     }
   )
 })
@@ -135,7 +137,7 @@ app.put("/api/categories/:category_id", function(req, res) {
 
 // Fetch all categories
 app.get('/api/categories', function(req, res) {
-  Category.find(function (err, categories) {
+  Category.find({}, null, {sort: {name:1}},function (err, categories) {
     if (err) res.send(err);
     res.json(categories);
   })
