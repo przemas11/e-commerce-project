@@ -21,7 +21,7 @@
               <button type="button" class="btn btn-info" @click="manageProducts">Zarządzaj istniejącymi produkatmi</button>
             </div>
             <div class="form-row form-group justify-content-center">
-              <button type="button" class="btn btn-secondary" @click="mode=3">Zarządzaj kategoriami</button>
+              <button type="button" class="btn btn-secondary" @click="manageCategories">Zarządzaj kategoriami</button>
             </div>
             <div class="form-row form-group justify-content-center">
               <button type="button" class="btn btn-dark" @click="mode=4">Zarządzanie zamówieniami</button>
@@ -40,14 +40,27 @@
 
             <product-form v-if="edit===true" :product="product" :key="formUpdate" v-on:cancel="edit=false" v-on:confirm="editRequest"/>
 
-            <div v-for="product in products" :key="product.name">
+            <div v-for="product in products" :key="product._id">
               <product-view class="product-view" :product="product" v-on:edit="enableEditMode" v-on:delete="deleteRequest" :manage="true"/>
             </div>
           </div>
 
-          <div v-if="mode===3">
+          <div class="categories" v-if="mode===3">
             <h1 class="display-4">Zarządzenie kategoriami</h1>
             <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
+
+            <div class="form-group col-4 offset-4">
+              <label>Nazwa kategorii</label>
+              <input type="text" class="form-control" placeholder="Nazwa" v-model="category.name" @keyup.enter="confirmNewCategory">
+              <button type="button" class="btn btn-primary" @click="confirmNewCategory">Dodaj nową kategorię</button>
+            </div>
+
+            <div v-for="category in categories" :key="category.name">
+              <div class="form-row form-group justify-content-center">
+                <h3>{{category.name}}</h3>
+                <button type="button" class="btn btn-danger delete-btn" @click="deleteCategory(category._id)">Usuń</button>
+              </div>
+            </div>
           </div>
 
           <div class="orders" v-if="mode===4">
@@ -63,6 +76,7 @@
 
 <script>
 import ProductsService from '../services/ProductsService'
+import CategoriesService from '../services/CategoriesService'
 import ProductView from './ProductView'
 import ProductForm from './ProductForm'
 
@@ -85,9 +99,14 @@ export default {
         description: '',
         shipping: '',
         warranty: null,
-        quantity: null
+        quantity: null,
+        category: ''
+      },
+      category: {
+        name: ''
       },
       products: [],
+      categories: [],
       formUpdate: 0
     }
   },
@@ -106,7 +125,7 @@ export default {
     addProduct: function () {
       if (this.product.name && this.product.price &&
       this.product.description && this.product.shipping &&
-      this.product.warranty && this.product.quantity) {
+      this.product.warranty && this.product.quantity && this.product.category) {
         var pattern = /^\d*$/
         if (pattern.test(this.product.warranty) && pattern.test(this.product.quantity)) {
           ProductsService.addProduct({
@@ -115,7 +134,8 @@ export default {
             description: this.product.description,
             shipping: this.product.shipping,
             warranty: this.product.warranty,
-            quantity: this.product.quantity
+            quantity: this.product.quantity,
+            category: this.product.category
           })
           this.clearInput()
         } else {
@@ -132,6 +152,9 @@ export default {
 
     deleteProduct: async function () {
       this.products = await ProductsService.deleteProduct(this.product)
+      if (this.products.length === 0) {
+        this.clearInput()
+      }
     },
 
     getProducts: async function () {
@@ -143,13 +166,19 @@ export default {
       this.getProducts()
     },
 
+    manageCategories: function () {
+      this.mode = 3
+      this.getCategories()
+    },
+
     clearInput: function () {
-      this.productData.name = ''
-      this.productData.price = null
-      this.productData.description = ''
-      this.productData.shipping = ''
-      this.productData.warranty = null
-      this.productData.quantity = null
+      this.product.name = ''
+      this.product.price = null
+      this.product.description = ''
+      this.product.shipping = ''
+      this.product.warranty = null
+      this.product.quantity = null
+      this.product.category = ''
     },
 
     closeManagement: function () {
@@ -179,6 +208,17 @@ export default {
     deleteRequest: function (productId) {
       this.product = this.products.find(x => x._id === productId)
       this.deleteProduct()
+    },
+
+    confirmNewCategory: async function () {
+      this.categories = await CategoriesService.addCategory(this.category)
+    },
+    getCategories: async function () {
+      this.categories = await CategoriesService.fetchCategories()
+    },
+    deleteCategory: async function (catId) {
+      var cat = this.categories.find(x => x._id === catId)
+      this.categories = await CategoriesService.deleteCategory(cat)
     }
   }
 }
@@ -200,10 +240,6 @@ export default {
 
 .form-control{ margin-bottom: 10px; text-align: center; }
 
-/* .btn{ margin-bottom: 10px; }
-
-.buttons{ margin-top: 30px; } */
-
 .login-form{ padding-top: 100px; margin: auto; width: 400px; }
 
 .panel{ margin-top: 50px; }
@@ -212,7 +248,7 @@ h1{ margin-bottom: 20px; }
 
 h1+.btn{ margin-bottom: 30px; }
 
-.product-view{
-  margin-bottom: 15px;
-}
+.product-view{ margin-bottom: 15px; }
+
+.delete-btn{ margin-left: 25px;}
 </style>
