@@ -1,6 +1,19 @@
+/* eslint-disable vue/require-v-for-key */
 <template>
   <div class="product-form">
     <div class="form-group">
+      <div class="row justify-content-md-center form-inline">
+        <div class="dropdown">
+          <input type="text" class="form-control" placeholder="Kategoria" v-model="productData.category" readonly>
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+            Kategoria
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" v-for="category in categories" :key="category.name" @click="selectCategory(category.name)">{{category.name}}</a>
+          </div>
+        </div>
+      </div>
+
       <div class="row justify-content-md-center">
         <div class="col-4">
           <label>Nazwa</label>
@@ -45,6 +58,7 @@
 
 <script>
 import Vue from 'vue'
+import CategoriesService from '../services/CategoriesService'
 
 export default {
   name: 'ProductForm',
@@ -55,12 +69,14 @@ export default {
       description: '',
       shipping: '',
       warranty: null,
-      quantity: null
+      quantity: null,
+      category: ''
     }
   },
   data: function () {
     return {
-      productData: Vue.util.extend({}, this.product)
+      productData: Vue.util.extend({}, this.product),
+      categories: []
     }
   },
   methods: {
@@ -76,12 +92,21 @@ export default {
       this.productData.shipping = ''
       this.productData.warranty = null
       this.productData.quantity = null
+      this.productData.category = ''
+    },
+    selectCategory: function (catName) {
+      this.productData.category = catName
     }
+  },
+  mounted: async function () {
+    this.categories = await CategoriesService.fetchCategories()
   }
 }
 </script>
 
 <style scoped>
+.dropdown input{ margin-right: 30px; }
+
 .form-control{ margin-bottom: 10px; text-align: center; }
 
 .btn{ margin-bottom: 10px; }
