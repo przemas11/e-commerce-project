@@ -23,5 +23,11 @@ export default {
     return Api().delete('api/products/' + params._id)
       .then(response => { return response.data })
       .catch(error => console.log(error))
+  },
+
+  fetchProductsFromCategory (params) {
+    return Api().get('api/products/category' + params._id)
+      .then(response => { return response.data })
+      .catch(error => console.log(error))
   }
 }
