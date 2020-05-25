@@ -4,12 +4,12 @@
     <div class="form-group">
       <div class="row justify-content-md-center form-inline">
         <div class="dropdown">
-          <input type="text" class="form-control" placeholder="Kategoria" v-model="productData.category" readonly>
+          <input type="text" class="form-control" placeholder="Kategoria" v-model="currentCategory" readonly>
           <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
             Kategoria
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" v-for="category in categories" :key="category.name" @click="selectCategory(category.name)">{{category.name}}</a>
+            <a class="dropdown-item" v-for="category in categories" :key="category.name" @click="selectCategory(category)">{{category.name}}</a>
           </div>
         </div>
       </div>
@@ -76,7 +76,8 @@ export default {
   data: function () {
     return {
       productData: Vue.util.extend({}, this.product),
-      categories: []
+      categories: [],
+      currentCategory: ''
     }
   },
   methods: {
@@ -93,13 +94,21 @@ export default {
       this.productData.warranty = null
       this.productData.quantity = null
       this.productData.category = ''
+      this.currentCategory = ''
     },
-    selectCategory: function (catName) {
-      this.productData.category = catName
+    selectCategory: function (category) {
+      this.currentCategory = category.name
+      this.productData.category = category._id
+    },
+    getCategories: async function (callbcack) {
+      this.categories = await CategoriesService.fetchCategories()
     }
   },
   mounted: async function () {
-    this.categories = await CategoriesService.fetchCategories()
+    await this.getCategories()
+  },
+  updated: function () {
+    this.currentCategory = this.categories.find(x => x._id === this.productData.category).name
   }
 }
 </script>
