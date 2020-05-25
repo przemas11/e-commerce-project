@@ -8,9 +8,10 @@
 
         <div class="col-md-6 ml-5">
           <div class="card-body text-left">
-            <h5 class="card-title">{{product.name}}</h5>
-            <p class="card-text">{{product.description}}</p>
-            <p class="card-text">Cena: {{product.price.toFixed(2)}}</p>
+            <h5 class="card-title"><div v-if="manage">Nazwa: </div>{{product.name}}</h5>
+            <p class="card-text">Cena: {{product.price.toFixed(2)}} zł</p>
+            <p class="card-text" v-if="manage">Kategoria: {{product.catString}}</p>
+            <p class="card-text"><small class="text-muted">Opis: {{product.description}}</small></p>
           </div>
         </div>
 
