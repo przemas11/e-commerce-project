@@ -16,6 +16,7 @@
 
         <div class="products-in-category" v-if="categorySelected">
           <p class="display-4 mt-3">{{currentCategoryInfo}}</p>
+          <h2 class="mt-5" v-if="products.length===0">Brak produktów w wybranej kateogrii</h2>
           <div class="products-list" v-for="product in products" :key="product._id">
             <product-view class="product-view" :product="product" />
           </div>
