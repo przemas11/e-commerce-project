@@ -83,6 +83,21 @@ app.get('/api/products', function(req, res) {
   })
 })
 
+// Fetch all products from given category
+app.get('/api/products/category:category_id', function(req, res) {
+  if (req.params.category_id === 'other') {
+    Product.find({category:''}, function (err, products) {
+      if (err) res.send(err);
+      res.json(products);
+    })
+  } else {
+    Product.find({category: req.params.category_id}, function (err, products) {
+      if (err) res.send(err);
+      res.json(products);
+    })
+  }
+})
+
 // Delete a product
 app.delete("/api/products/:product_id", function(req, res) {
   Product.remove(
@@ -110,7 +125,7 @@ app.post('/api/categories', function(req, res) {
     function(err) { 
       if (err) res.send(err);
       else {
-        Category.find(function(err, categories) {
+        Category.find({}, null, {sort: {name:1}},function (err, categories) {
           if (err) res.send(err);
           res.json(categories);
         })
@@ -127,10 +142,10 @@ app.put("/api/categories/:category_id", function(req, res) {
     category.update(req.body, {overwrite: true}, function(err, writeOpResult) {
       if (err) res.send(err);
 
-      Category.find(function(err, categories) {
+      Category.find({}, null, {sort: {name:1}},function (err, categories) {
         if (err) res.send(err);
         res.json(categories);
-      });
+      })
     });
   });
 });
@@ -152,10 +167,10 @@ app.delete("/api/categories/:category_id", function(req, res) {
     function(err, category) {
       if (err) res.send(err);
 
-      Category.find(function(err, categories) {
+      Category.find({}, null, {sort: {name:1}},function (err, categories) {
         if (err) res.send(err);
         res.json(categories);
-      });
+      })
     }
   );
 });
