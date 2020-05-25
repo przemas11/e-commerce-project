@@ -5,7 +5,9 @@ var CategorySchema = new Schema({
   name: { type: String, unique: true, required: true }
 },
 {
-  timestamps: true
-});
+  timestamps: true,
+  collation: { locale: 'pl', strength: 1 }
+},
+);
 
 module.exports = CategorySchema;

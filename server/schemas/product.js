@@ -8,10 +8,11 @@ var ProductSchema = new Schema({
   shipping: { type: String, required: true },
   warranty: { type: Number, required: true },
   quantity: { type: Number, required: true },
-  category: { type: String, required: true },
+  category: { type: String },
 },
 {
-  timestamps: true
+  timestamps: true,
+  collation: { locale: 'pl', strength: 1 }
 });
 
 module.exports = ProductSchema;
