@@ -40,9 +40,10 @@
 
             <product-form v-if="edit===true" :product="product" :key="formUpdate" v-on:cancel="edit=false" v-on:confirm="editRequest"/>
 
-            <div v-for="product in products" :key="product._id">
+            <!-- <div v-for="product in products" :key="product._id">
               <product-view class="product-view" :product="product" v-on:edit="enableEditMode" v-on:delete="deleteRequest" :manage="true"/>
-            </div>
+            </div> -->
+            <products-list v-on:edit="enableEditMode" v-on:delete="deleteRequest" :key="product" manage="true"/>
           </div>
 
           <div class="categories" v-if="mode===3">
@@ -77,14 +78,16 @@
 <script>
 import ProductsService from '../services/ProductsService'
 import CategoriesService from '../services/CategoriesService'
-import ProductView from './ProductView'
+// import ProductView from './ProductView'
 import ProductForm from './ProductForm'
+import ProductsList from './ProductsList'
 
 export default {
   name: 'AdminPanel',
   components: {
-    'product-view': ProductView,
-    'product-form': ProductForm
+    // 'product-view': ProductView,
+    'product-form': ProductForm,
+    'products-list': ProductsList
   },
   data: function () {
     return {
@@ -148,6 +151,7 @@ export default {
 
     editProduct: async function () {
       this.products = await ProductsService.editProduct(this.product)
+      this.product = undefined
     },
 
     deleteProduct: async function () {
@@ -157,9 +161,9 @@ export default {
 
     getProducts: async function () {
       this.products = await ProductsService.fetchProducts()
-      for (let product of this.products) {
-        product.catString = this.categories.find(x => x._id === product.category).name
-      }
+      // for (let product of this.products) {
+      //   product.catString = this.categories.find(x => x._id === product.category).name
+      // }
     },
 
     manageProducts: function () {
@@ -237,7 +241,7 @@ export default {
   min-height: 650px;
   margin-right: 150px;
   margin-left: 150px;
-  background-color: #f0f0f0;
+  background-color: #dadada;
   border-radius: 15px;
 }
 
@@ -251,7 +255,7 @@ h1{ margin-bottom: 20px; }
 
 h1+.btn{ margin-bottom: 30px; }
 
-.product-view{ margin-bottom: 15px; }
+/* .product-view{ margin-bottom: 15px; } */
 
 .delete-btn{ margin-left: 25px;}
 </style>

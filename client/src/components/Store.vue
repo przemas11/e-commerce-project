@@ -2,7 +2,8 @@
   <div class="store">
     <navbar v-bind:activeIndex='1'/>
 
-    <div id="content">
+    <products-list/>
+    <!-- <div id="content">
       <ul class="list-group" id="categories">
         <h2>Kategorie</h2>
         <div v-for="category in categories" :key="category._id">
@@ -22,83 +23,85 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <my-footer/>
   </div>
 </template>
 
 <script>
-import ProductsService from '../services/ProductsService'
-import CategoriesService from '../services/CategoriesService'
-import ProductView from './ProductView'
+// import ProductsService from '../services/ProductsService'
+// import CategoriesService from '../services/CategoriesService'
+// import ProductView from './ProductView'
+import ProductsList from './ProductsList'
 
 export default {
   name: 'MainPage',
   components: {
-    'product-view': ProductView
+    // 'product-view': ProductView,
+    'products-list': ProductsList
   },
   data: function () {
     return {
-      categories: [],
-      categorySelected: false,
-      currentCategoryInfo: '',
-      products: []
+      // categories: [],
+      // categorySelected: false,
+      // currentCategoryInfo: '',
+      // products: []
     }
-  },
-  methods: {
-    getCategories: async function () {
-      this.categories = await CategoriesService.fetchCategories()
-    },
-    showCategory: function (category) {
-      this.categorySelected = true
-      if (category) {
-        this.currentCategoryInfo = 'Kategoria ' + category.name
-        this.getProductsFromCategory(category.name)
-        // this.$router.push({ path: '/' })
-      } else {
-        this.currentCategoryInfo = 'Pozostałe produkty'
-        this.getProductsFromCategory(undefined)
-      }
-    },
-    getProductsFromCategory: async function (catName) {
-      if (catName) {
-        this.products = await ProductsService.fetchProductsFromCategory(
-          this.categories.find(x => x.name === catName))
-      } else {
-        this.products = await ProductsService.fetchProductsFromCategory({ _id: 'other' })
-      }
-    }
-  },
-  mounted: function () {
-    this.getCategories()
   }
+  // methods: {
+  //   getCategories: async function () {
+  //     this.categories = await CategoriesService.fetchCategories()
+  //   },
+  //   showCategory: function (category) {
+  //     this.categorySelected = true
+  //     if (category) {
+  //       this.currentCategoryInfo = 'Kategoria ' + category.name
+  //       this.getProductsFromCategory(category.name)
+  //       // this.$router.push({ path: '/' })
+  //     } else {
+  //       this.currentCategoryInfo = 'Pozostałe produkty'
+  //       this.getProductsFromCategory(undefined)
+  //     }
+  //   },
+  //   getProductsFromCategory: async function (catName) {
+  //     if (catName) {
+  //       this.products = await ProductsService.fetchProductsFromCategory(
+  //         this.categories.find(x => x.name === catName))
+  //     } else {
+  //       this.products = await ProductsService.fetchProductsFromCategory({ _id: 'other' })
+  //     }
+  //   }
+  // },
+  // mounted: function () {
+  //   this.getCategories()
+  // }
 }
 </script>
 
 <style scoped>
 .store{ text-align: center; }
 
-#content{ display: flex; }
+/* #content{ display: flex; } */
 
-#categories{
+/* #categories{
   min-width: 15%;
   padding: 10px 0px;
   margin-left: 150px;
   margin-right: 10px;
-}
+} */
 
-.main-content{
+/* .main-content{
   width: 100%;
   background-color: #f0f0f0;
   border-radius: 15px;
   margin-right: 150px;
-}
+} */
 
-.center-info{ padding: 200px 0; }
+/* .center-info{ padding: 200px 0; }
 
 @media screen and (max-width: 1600px) {
   .categories, .main-content {
     width: 100%;
   }
-}
+} */
 </style>
