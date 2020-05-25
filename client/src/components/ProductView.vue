@@ -19,7 +19,7 @@
           <button type="button" class="btn btn-danger" @click="deleteProduct">Usuń produkt</button>
         </div>
 
-        <div class="management-btns col-2 offset-1" v-if="!manage">
+        <div class="product-btns col-2 offset-1" v-if="!manage">
           <button type="button" class="btn btn-primary" @click="addToCart">Dodaj do koszyka</button>
         </div>
       </div>
