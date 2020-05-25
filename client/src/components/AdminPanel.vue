@@ -152,17 +152,19 @@ export default {
 
     deleteProduct: async function () {
       this.products = await ProductsService.deleteProduct(this.product)
-      if (this.products.length === 0) {
-        this.clearInput()
-      }
+      this.clearInput()
     },
 
     getProducts: async function () {
       this.products = await ProductsService.fetchProducts()
+      for (let product of this.products) {
+        product.catString = this.categories.find(x => x._id === product.category).name
+      }
     },
 
     manageProducts: function () {
       this.mode = 2
+      this.getCategories()
       this.getProducts()
     },
 
@@ -184,6 +186,7 @@ export default {
     closeManagement: function () {
       this.mode = 0
       this.edit = false
+      this.clearInput()
     },
 
     newConfirmed: function (product) {
