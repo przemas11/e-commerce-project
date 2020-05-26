@@ -23,9 +23,6 @@
             <div class="form-row form-group justify-content-center">
               <button type="button" class="btn btn-secondary" @click="manageCategories">Zarządzaj kategoriami</button>
             </div>
-            <div class="form-row form-group justify-content-center">
-              <button type="button" class="btn btn-dark" @click="mode=4">Zarządzanie zamówieniami</button>
-            </div>
           </div>
 
           <div v-if="mode===1">
@@ -59,11 +56,6 @@
                 <button type="button" class="btn btn-danger delete-btn" @click="deleteCategory(category._id)">Usuń</button>
               </div>
             </div>
-          </div>
-
-          <div class="orders" v-if="mode===4">
-            <h1 class="display-4">Zarządzanie zamówieniami</h1>
-            <button type="button" class="btn btn-primary" @click="mode=0">Powrót</button>
           </div>
         </div>
       </div>
