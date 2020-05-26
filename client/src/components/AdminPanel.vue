@@ -146,7 +146,6 @@ export default {
 
     editProduct: async function () {
       this.products = await ProductsService.editProduct(this.product)
-      this.product = undefined
     },
 
     deleteProduct: async function () {

@@ -2,7 +2,7 @@
   <div class="store">
     <navbar v-bind:activeIndex='1'/>
 
-    <products-list/>
+    <products-list enlarge="true"/>
 
     <my-footer/>
   </div>

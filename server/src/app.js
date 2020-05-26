@@ -26,11 +26,17 @@ const CategorySchema = require("../schemas/category")
 const Product = ProductConnection.model('Product', ProductSchema)
 const Category = CategoryConnection.model('Category', CategorySchema)
 
-// var db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error"));
-// db.once("open", function(callback){
-//   console.log("Connection Succeeded");
-// });
+// connection informations =====================================================
+
+ProductConnection.on("error", console.error.bind(console, "Product connection error"));
+ProductConnection.once("open", function(callback){
+    console.log("Product connection Succeeded");
+});
+CategoryConnection.on("error", console.error.bind(console, "Category connection error"));
+CategoryConnection.once("open", function(callback){
+    console.log("Category connection Succeeded");
+});
+
 
 // routes =======================================================================
 // API/Product ==================================================================
@@ -160,19 +166,29 @@ app.get('/api/categories', function(req, res) {
 
 // Delete a category
 app.delete("/api/categories/:category_id", function(req, res) {
-  Category.remove(
-    {
-      _id: req.params.category_id
-    },
-    function(err, category) {
-      if (err) res.send(err);
-
-      Category.find({}, null, {sort: {name:1}},function (err, categories) {
+  Product.find({category: req.params.category_id}, function(err, products) {
+    if (err) res.send(err);
+    
+    products.forEach(p => {
+      p.update({ category: '' }, function(err) {
         if (err) res.send(err);
-        res.json(categories);
-      })
-    }
-  );
+      });
+    });
+
+    Category.remove(
+      {
+        _id: req.params.category_id
+      },
+      function(err, category) {
+        if (err) res.send(err);
+  
+        Category.find({}, null, {sort: {name:1}},function (err, categories) {
+          if (err) res.send(err);
+          res.json(categories);
+        })
+      }
+    );
+  });
 });
 
 app.listen(process.env.PORT || 8081)

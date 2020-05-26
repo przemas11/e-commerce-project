@@ -4,7 +4,7 @@
       <div class="row no-gutters ml-4">
         <div class="row col-md-9" @click="productClicked(product)">
           <div class="product-image">
-            <img src="../assets/missing-image.png" class="card-img" alt="produkt">
+            <img src="../assets/missing-image.png" class="card-img " alt="produkt">
           </div>
 
           <div class="col-md-6">
@@ -51,7 +51,7 @@ export default {
       this.$emit('delete', this.product._id)
     },
     addToCart: function () {
-      this.$emit('addToCart', this.product._id)
+      this.$emit('addToCart', this.product)
     },
     productClicked: function () {
       this.$emit('clicked', this.product)
@@ -65,21 +65,18 @@ export default {
 
 .product-image{
   width: 150px;
+  height: 150px;
   margin-top: auto;
   margin-bottom: auto;
-  margin-left: 10px; }
+  margin-left: 10px;
+  overflow: hidden;
+}
 
 .card-img img{
+  position: absolute;
   max-width: 100%;
   max-height:100%;
-  width: auto;
-  height: auto;
-  position: absolute;
-  align-self: center;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  margin-top: auto;
   margin: auto;
 }
 
@@ -92,8 +89,4 @@ export default {
 .product-btns{ margin-top: auto; margin-bottom: auto; }
 
 .product-btns>button{ width: 100%; margin-bottom: 6px; }
-
-/* .add-to-cart{
-
-} */
 </style>
