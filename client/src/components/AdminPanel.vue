@@ -86,7 +86,7 @@ export default {
   },
   data: function () {
     return {
-      loggedIn: true,
+      loggedIn: false,
       loginInput: '',
       passwordInput: '',
       mode: 0,

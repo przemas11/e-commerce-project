@@ -3,7 +3,7 @@
     <navbar/>
 
     <div id="content">
-      <div class="main-content">
+      <div class="main-content" id="products-in-cart" v-if="!payment">
         <p class="display-4">Koszyk</p>
         <div v-if="cart.length">
           <div v-for="product in cart" :key="product._id">
@@ -23,15 +23,35 @@
               </div>
             </div>
           </div>
+          <h1>Łącznie do zapłaty: {{sum}} zł</h1>
 
           <div class="buttons">
-            <button type="button" class="btn btn-primary">Przejdź do płatności</button>
+            <button type="button" class="btn btn-primary" @click="payment=true">Przejdź do płatności</button>
             <button type="button" class="btn btn-primary" @click="clearCart">Wyczyść koszyk</button>
           </div>
         </div>
         <div v-else>
           <h2 class="mt-5">Brak produktów w koszyku</h2>
         </div>
+      </div>
+
+      <div class="main-content" id="products-in-cart" v-if="payment">
+        <p class="display-4">Dane do przelewu</p>
+        <div class="row mb-5">
+          <div class="col-3 offset-2 text-right">
+            <h2>Nazwa odbiorcy:</h2>
+            <h2>Numer rachunku:</h2>
+            <h2>Kwota:</h2>
+            <h2>Tytuł przelewu:</h2>
+          </div>
+          <div class="col-7 text-left">
+            <h2>Przykładowa nazwa odbiorcy</h2>
+            <h2>12 3456 7890 1234 5678 9012 3456</h2>
+            <h2>{{sum}} PLN</h2>
+            <h2>Opłata za zamówienie nr 123123</h2>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="confirmPayment">Potwierdź zamówienie</button>
       </div>
     </div>
     <my-footer/>
@@ -43,7 +63,9 @@ export default {
   name: 'Cart',
   data: function () {
     return {
-      cart: []
+      cart: [],
+      payment: false,
+      sum: 0
     }
   },
   methods: {
@@ -52,13 +74,19 @@ export default {
       if (retrievedObject) {
         this.cart = JSON.parse(retrievedObject)
       }
+      this.calculatePrice()
     },
-    saveCart: function () {
+    updateCart: function () {
       localStorage.setItem('cart', JSON.stringify(this.cart))
+      this.loadCart()
+    },
+    calculatePrice: function () {
+      this.sum = 0
+      this.cart.forEach((p) => { this.sum += p.price * p.inCart })
     },
     plusOne: function (product) {
       product.inCart += 1
-      this.saveCart()
+      this.updateCart()
     },
     minusOne: function (product) {
       if (product.inCart) {
@@ -66,17 +94,22 @@ export default {
         if (product.inCart === 0) {
           this.deleteProduct(product._id)
         } else {
-          this.saveCart()
+          this.updateCart()
         }
       }
     },
     deleteProduct: function (id) {
       var index = this.cart.findIndex(p => p._id === id)
       this.cart.splice(index, 1)
-      this.saveCart()
+      this.updateCart()
     },
     clearCart: function () {
       this.cart = []
+      this.updateCart()
+    },
+    confirmPayment: function () {
+      this.clearCart()
+      this.$router.push('/store')
     }
   },
   mounted: function () {
