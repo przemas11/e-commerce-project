@@ -2,26 +2,29 @@
   <div class="product-view">
     <div class="card mb-3" style="max-width: 1000px;">
       <div class="row no-gutters ml-4">
-        <div class="col-md-2 product-image">
-          <img src="../assets/missing-image.png" class="card-img" alt="produkt">
-        </div>
+        <div class="row col-md-9" @click="productClicked(product)">
+          <div class="product-image">
+            <img src="../assets/missing-image.png" class="card-img" alt="produkt">
+          </div>
 
-        <div class="col-md-6 ml-5">
-          <div class="card-body text-left">
-            <h5 class="card-title"><div class="d-inline" v-if="manage">Nazwa: </div>{{product.name}}</h5>
-            <p class="card-text">Cena: {{product.price.toFixed(2)}} zł</p>
-            <!-- <p class="card-text"><div class="d-inline" v-if="manage">Kategoria: </div>{{product.catString}}</p> -->
-            <p class="card-text"><small class="text-muted">Opis: {{product.description}}</small></p>
+          <div class="col-md-6">
+            <div class="card-body text-left">
+              <h5 class="card-title"><div class="d-inline" v-if="manage">Nazwa: </div>{{product.name}}</h5>
+              <p class="card-text">Cena: {{product.price.toFixed(2)}} zł</p>
+              <p class="card-text"><small class="text-muted">Opis: {{product.description}}</small></p>
+            </div>
           </div>
         </div>
 
-        <div class="product-btns col-2 offset-1" v-if="manage">
-          <button type="button" class="btn btn-primary" @click="editProduct">Edytuj produkt</button>
-          <button type="button" class="btn btn-danger" @click="deleteProduct">Usuń produkt</button>
-        </div>
+        <div class="btns-group offset-9 col-2">
+          <div class="product-btns" v-if="manage">
+            <button type="button" class="btn btn-primary" @click="editProduct">Edytuj produkt</button>
+            <button type="button" class="btn btn-danger" @click="deleteProduct">Usuń produkt</button>
+          </div>
 
-        <div class="product-btns col-2 offset-1" v-if="!manage">
-          <button type="button" class="btn btn-primary" @click="addToCart">Dodaj do koszyka</button>
+          <div class="product-btns" v-if="!manage">
+            <button type="button" class="btn btn-primary" @click="addToCart">Dodaj do koszyka</button>
+          </div>
         </div>
       </div>
     </div>
@@ -49,6 +52,9 @@ export default {
     },
     addToCart: function () {
       this.$emit('addToCart', this.product._id)
+    },
+    productClicked: function () {
+      this.$emit('clicked', this.product)
     }
   }
 }
@@ -57,9 +63,13 @@ export default {
 <style scoped>
 .card{ margin: 0 auto; }
 
-/* .product-image{ position: relative; } */
+.product-image{
+  width: 150px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px; }
 
-.product-image>img{
+.card-img img{
   max-width: 100%;
   max-height:100%;
   width: auto;
@@ -71,6 +81,12 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
+}
+
+.btns-group{
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 .product-btns{ margin-top: auto; margin-bottom: auto; }

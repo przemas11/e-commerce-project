@@ -108,7 +108,10 @@ export default {
     await this.getCategories()
   },
   updated: function () {
-    this.currentCategory = this.categories.find(x => x._id === this.productData.category).name
+    var tmpCat = this.categories.find(x => x._id === this.productData.category)
+    if (tmpCat) {
+      this.currentCategory = tmpCat.name
+    }
   }
 }
 </script>

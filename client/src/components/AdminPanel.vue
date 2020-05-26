@@ -40,10 +40,7 @@
 
             <product-form v-if="edit===true" :product="product" :key="formUpdate" v-on:cancel="edit=false" v-on:confirm="editRequest"/>
 
-            <!-- <div v-for="product in products" :key="product._id">
-              <product-view class="product-view" :product="product" v-on:edit="enableEditMode" v-on:delete="deleteRequest" :manage="true"/>
-            </div> -->
-            <products-list v-on:edit="enableEditMode" v-on:delete="deleteRequest" :key="product" manage="true"/>
+            <products-list v-on:edit="enableEditMode" v-on:delete="deleteRequest" :key="product._id" manage="true"/>
           </div>
 
           <div class="categories" v-if="mode===3">
@@ -78,14 +75,12 @@
 <script>
 import ProductsService from '../services/ProductsService'
 import CategoriesService from '../services/CategoriesService'
-// import ProductView from './ProductView'
 import ProductForm from './ProductForm'
 import ProductsList from './ProductsList'
 
 export default {
   name: 'AdminPanel',
   components: {
-    // 'product-view': ProductView,
     'product-form': ProductForm,
     'products-list': ProductsList
   },
@@ -161,9 +156,6 @@ export default {
 
     getProducts: async function () {
       this.products = await ProductsService.fetchProducts()
-      // for (let product of this.products) {
-      //   product.catString = this.categories.find(x => x._id === product.category).name
-      // }
     },
 
     manageProducts: function () {
@@ -239,6 +231,7 @@ export default {
 .main-content{
   width: 100%;
   min-height: 650px;
+  min-width: 1080px;
   margin-right: 150px;
   margin-left: 150px;
   background-color: #dadada;
@@ -254,8 +247,6 @@ export default {
 h1{ margin-bottom: 20px; }
 
 h1+.btn{ margin-bottom: 30px; }
-
-/* .product-view{ margin-bottom: 15px; } */
 
 .delete-btn{ margin-left: 25px;}
 </style>

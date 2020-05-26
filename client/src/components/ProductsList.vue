@@ -15,9 +15,7 @@
         <p class="display-4 mt-3">{{currentCategoryInfo}}</p>
         <h2 class="mt-5" v-if="products.length===0">Brak produktów w wybranej kateogrii</h2>
         <div class="products-list" v-for="product in products" :key="product._id">
-          <a @click="productClicked(product)">
-            <product-view class="product-view" :product="product" v-on:edit="enableEditMode" v-on:delete="deleteRequest" :manage="manage"/>
-          </a>
+          <product-view class="product-view" :product="product" @edit="enableEditMode" @delete="deleteRequest" @clicked="productClicked" :manage="manage"/>
         </div>
       </div>
     </div>
